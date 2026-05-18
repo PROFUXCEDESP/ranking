@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Ranking Oficial CEDESP - Bingo 2026</title>
     <link rel="icon" href="assets/image/CORACAO_COMUNITA.png" type="image/png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@300;400;600;700&display=swap">
@@ -12,47 +12,122 @@
         :root {
             --petal-pink: #BC68A1; 
             --sunflower-gold: #F4B841;
-            --dim-grey: #626262;
-            --bg-color: #fcf9fc;
+            --dim-grey: #4a4a4a;
+            --light-grey: #888888;
+            --bg-color: #f4f4f9;
+            --card-bg: #ffffff;
+            --border-color: #eaebf0;
         }
+        
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Sofia Sans', sans-serif; }
-        body { background-color: var(--bg-color); color: var(--dim-grey); padding: 1.5rem 0.5rem; display: flex; flex-direction: column; align-items: center; }
         
-        .header-publico { text-align: center; margin-bottom: 1.5rem; width: 100%; max-width: 1000px; padding: 0 10px; }
-        .header-publico img { max-width: 180px; margin-bottom: 0.5rem; }
-        .header-publico h1 { color: var(--petal-pink); font-size: 1.8rem; text-transform: uppercase; letter-spacing: 1px; }
-        .header-publico p { font-size: 0.95rem; color: #a0a0a0; margin-top: 5px; }
+        body { 
+            background-color: var(--bg-color); 
+            color: var(--dim-grey); 
+            padding: 2rem 1rem; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        /* Cabeçalho Responsivo */
+        .header-publico { text-align: center; margin-bottom: 2rem; width: 100%; max-width: 1000px; }
+        .header-publico img { width: 100%; max-width: 200px; margin-bottom: 0.5rem; transition: 0.3s; }
+        .header-publico h1 { color: var(--petal-pink); font-size: clamp(1.5rem, 4vw, 2.2rem); text-transform: uppercase; letter-spacing: 1px; line-height: 1.2; }
+        .header-publico p { font-size: clamp(0.9rem, 2vw, 1.1rem); color: var(--light-grey); margin-top: 5px; }
 
-        .ranking-card { background: white; width: 100%; max-width: 1000px; border-radius: 16px; padding: 15px; box-shadow: 0 4px 20px rgba(188, 104, 161, 0.08); margin-bottom: 1.5rem; }
-        .section-title { text-align: center; margin-bottom: 1.5rem; color: var(--dim-grey); font-size: 1.4rem; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        /* Card Principal */
+        .ranking-card { 
+            background: var(--card-bg); 
+            width: 100%; 
+            max-width: 1100px; 
+            border-radius: 16px; 
+            padding: 20px; 
+            box-shadow: 0 8px 30px rgba(188, 104, 161, 0.06); 
+            margin-bottom: 1.5rem; 
+        }
+
+        .section-title { 
+            text-align: center; 
+            margin-bottom: 1.5rem; 
+            color: var(--dim-grey); 
+            font-size: clamp(1.2rem, 3vw, 1.6rem); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 8px; 
+        }
         
-        .table-container { width: 100%; }
-        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-        th, td { padding: 10px 6px; text-align: left; border-bottom: 1px solid #eee; font-size: 0.9rem; vertical-align: middle; word-wrap: break-word; }
-        th { color: #a0a0a0; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; }
+        .search-bar { 
+            width: 100%; 
+            padding: 0.8rem 1rem; 
+            border-radius: 10px; 
+            border: 1px solid var(--border-color); 
+            color: var(--dim-grey); 
+            font-size: 1rem; 
+            outline: none; 
+            transition: all 0.3s ease; 
+            margin-bottom: 1.5rem; 
+            background-color: #fafafa;
+        }
+        .search-bar:focus { border-color: var(--petal-pink); box-shadow: 0 0 0 3px rgba(188, 104, 161, 0.15); background-color: #fff; }
+
+        /* Container da Tabela (O Segredo do Scroll Mobile) */
+        .table-container { 
+            width: 100%; 
+            overflow-x: auto; 
+            -webkit-overflow-scrolling: touch; 
+            border-radius: 8px;
+        }
+        
+        /* Customizando a barra de rolagem horizontal para ficar elegante */
+        .table-container::-webkit-scrollbar { height: 6px; }
+        .table-container::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+        .table-container::-webkit-scrollbar-thumb { background: #d4d4d4; border-radius: 4px; }
+        .table-container::-webkit-scrollbar-thumb:hover { background: var(--petal-pink); }
+
+        table { width: 100%; border-collapse: collapse; min-width: 800px; text-align: left; }
+        th, td { padding: 14px 10px; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+        th { color: var(--light-grey); font-weight: 600; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.5px; background-color: #fdfdfd; position: sticky; top: 0; }
+        
         .text-center { text-align: center; }
         
-        .table-avatar { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid var(--petal-pink); display: block; margin: 0 auto; }
-        .highlight-purple { color: var(--petal-pink); font-weight: bold; font-size: 1.05rem; }
-        
-        .search-bar { width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid #ccc; color: var(--dim-grey); font-size: 1rem; outline: none; transition: 0.3s; margin-bottom: 1rem; }
-        .search-bar:focus { border-color: var(--petal-pink); box-shadow: 0 0 0 3px rgba(188, 104, 161, 0.2); }
+        /* Imagem e Textos fluidos */
+        .table-avatar { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid var(--petal-pink); display: block; margin: 0 auto; }
+        .highlight-purple { color: var(--petal-pink); font-weight: 700; font-size: 1.15rem; }
+        .nome-aluno { color: #222; font-weight: 600; font-size: 1.05rem; }
+        .info-secundaria { color: var(--light-grey); font-size: 0.85rem; }
 
-        /* Paginação Discreta Centralizada */
-        .discrete-pagination { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee; }
-        .btn-page-discrete { background: var(--bg-color); border: 1px solid #ccc; border-radius: 4px; cursor: pointer; font-size: 1.2rem; color: var(--petal-pink); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; transition: 0.2s; font-weight: bold; }
-        .btn-page-discrete:hover:not(:disabled) { border-color: var(--petal-pink); background: white; }
+        /* Paginação */
+        .discrete-pagination { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-color); }
+        .btn-page-discrete { background: #fff; border: 1px solid #ccc; border-radius: 6px; cursor: pointer; font-size: 1.2rem; color: var(--petal-pink); width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; transition: 0.2s; font-weight: bold; }
+        .btn-page-discrete:hover:not(:disabled) { border-color: var(--petal-pink); background: var(--petal-pink); color: white; }
         .btn-page-discrete:disabled { color: #ccc; border-color: #eee; cursor: not-allowed; }
-        .page-input-discrete { width: 45px; height: 32px; padding: 4px; text-align: center; border: 1px solid #ccc; border-radius: 4px; font-weight: bold; color: var(--dim-grey); outline: none; }
+        .page-input-discrete { width: 45px; height: 36px; padding: 4px; text-align: center; border: 1px solid #ccc; border-radius: 6px; font-weight: 600; color: var(--dim-grey); outline: none; }
         
-        .status-update { text-align: center; font-size: 0.85rem; color: #a0a0a0; margin-top: 0.5rem; display: flex; align-items: center; justify-content: center; gap: 5px; }
-        .spinner { animation: spin 1s linear infinite; }
+        /* Status Update Animado */
+        .status-update { text-align: center; font-size: 0.85rem; color: var(--light-grey); margin-top: 1rem; display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: 500; }
+        .spinner { animation: spin 1s linear infinite; color: var(--petal-pink); }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* Ícones Pódio */
-        .pos-1 { color: #FFD700; font-size: 1.6rem; }
-        .pos-2 { color: #C0C0C0; font-size: 1.4rem; }
-        .pos-3 { color: #CD7F32; font-size: 1.3rem; }
+        /* =========================================
+           RESPONSIVIDADE (MOBILE MAX 768px)
+           ========================================= */
+        @media (max-width: 768px) {
+            body { padding: 1rem 0.5rem; }
+            .ranking-card { padding: 15px 10px; border-radius: 12px; }
+            .header-publico img { max-width: 160px; }
+            
+            /* Ajusta a tabela para telas menores */
+            th, td { padding: 12px 8px; font-size: 0.9rem; }
+            .table-avatar { width: 36px; height: 36px; }
+            .nome-aluno { font-size: 0.95rem; }
+            .highlight-purple { font-size: 1.05rem; }
+            
+            /* Diminui o min-width para forçar o scroll horizontal perfeito sem "espremer" muito */
+            table { min-width: 700px; }
+        }
     </style>
 </head>
 <body>
@@ -64,25 +139,25 @@
     </div>
 
     <div class="ranking-card">
-        <h2 class="section-title"><span class="material-symbols-outlined" style="font-size: 2rem; color: var(--sunflower-gold);">emoji_events</span> Classificação Geral</h2>
+        <h2 class="section-title"><span class="material-symbols-outlined" style="font-size: 2rem; color: var(--sunflower-gold);">emoji_events</span> Classificação Oficial</h2>
         <input type="text" id="buscaRankingPublico" class="search-bar" placeholder="🔍 Digite seu nome para buscar...">
         
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
-                        <th class="text-center" style="width: 45px;">Pos.</th>
-                        <th class="text-center" style="width: 50px;">Foto</th>
+                        <th class="text-center" style="width: 50px;">Pos.</th>
+                        <th class="text-center" style="width: 60px;">Foto</th>
                         <th style="width: 25%;">Nome</th>
                         <th style="width: 15%;">Turma</th>
                         <th style="width: 20%;">Curso</th>
-                        <th class="text-center" style="width: 65px;">Vendidos</th>
-                        <th class="text-center" style="width: 65px;">Cartelas Extra</th>
-                        <th class="text-center" style="width: 50px;">Fone</th>
+                        <th class="text-center" style="width: 80px;">Vendidos</th>
+                        <th class="text-center" style="width: 100px;">Cartelas Extra</th>
+                        <th class="text-center" style="width: 60px;">Fone</th>
                     </tr>
                 </thead>
                 <tbody id="tabelaAlunosPublica">
-                    <tr><td colspan="8" class="text-center">Sincronizando dados com a secretaria...</td></tr>
+                    <tr><td colspan="8" class="text-center" style="padding: 2rem;">Sincronizando dados com a secretaria...</td></tr>
                 </tbody>
             </table>
         </div>
@@ -90,7 +165,7 @@
     </div>
 
     <div class="status-update">
-        <span class="material-symbols-outlined spinner" id="iconeSync" style="font-size: 16px;">sync</span>
+        <span class="material-symbols-outlined spinner" id="iconeSync" style="font-size: 18px;">sync</span>
         <span id="textoUltimaAtt">Conectando...</span>
     </div>
 
@@ -129,32 +204,30 @@
                 const posReal = startIdx + index + 1;
                 const rec = calcularRecompensas(aluno.lotesVendidos);
                 
-                const cartelasHTML = rec.cartelas > 0 ? `<span style="color:var(--sunflower-gold); font-weight:bold;">${rec.cartelas}</span>` : '-';
-                const foneHTML = rec.fone > 0 ? '<span class="material-symbols-outlined" style="color:var(--petal-pink); font-size:20px;">headphones</span>' : '-';
+                const cartelasHTML = rec.cartelas > 0 ? `<span style="color:var(--sunflower-gold); font-weight:bold; font-size:1.1rem;">${rec.cartelas}</span>` : '<span style="color:#ddd;">-</span>';
+                const foneHTML = rec.fone > 0 ? '<span class="material-symbols-outlined" style="color:var(--petal-pink); font-size:22px;">headphones</span>' : '<span style="color:#ddd;">-</span>';
 
-                let iconePos = `<span style="font-weight:bold;">${posReal}º</span>`;
-                if(posReal === 1) iconePos = `<span class="material-symbols-outlined pos-1">workspace_premium</span>`;
-                else if(posReal === 2) iconePos = `<span class="material-symbols-outlined pos-2">workspace_premium</span>`;
-                else if(posReal === 3) iconePos = `<span class="material-symbols-outlined pos-3">workspace_premium</span>`;
+                // Numeração padrão para TODOS, sem distinção visual de medalhas
+                const iconePos = `<span style="font-weight:700; font-size:1.1rem; color:var(--dim-grey);">${posReal}º</span>`;
 
                 return `<tr>
                     <td class="text-center">${iconePos}</td>
-                    <td><img src="${aluno.foto}" class="table-avatar"></td>
-                    <td><strong style="color:#333;">${aluno.nome}</strong></td>
-                    <td style="color:var(--dim-grey);">${aluno.turma}</td>
-                    <td style="color:var(--dim-grey);">${aluno.curso}</td>
+                    <td><img src="${aluno.foto}" class="table-avatar" loading="lazy"></td>
+                    <td><span class="nome-aluno">${aluno.nome}</span></td>
+                    <td class="info-secundaria">${aluno.turma}</td>
+                    <td class="info-secundaria">${aluno.curso}</td>
                     <td class="text-center highlight-purple">${aluno.lotesVendidos}</td>
                     <td class="text-center">${cartelasHTML}</td>
                     <td class="text-center">${foneHTML}</td>
                 </tr>`;
-            }).join('') || '<tr><td colspan="8" class="text-center" style="padding: 20px; color: #a0a0a0;">Nenhum registro encontrado.</td></tr>';
+            }).join('') || '<tr><td colspan="8" class="text-center" style="padding: 2.5rem; color: #a0a0a0;">Nenhum registro encontrado.</td></tr>';
 
             const divPag = document.getElementById("paginacaoAlunos");
             divPag.innerHTML = `
                 <div class="discrete-pagination">
                     <button class="btn-page-discrete" ${paginaAtual === 1 ? 'disabled' : ''} onclick="mudarPagina(-1)">&lt;</button>
                     <input type="number" class="page-input-discrete" value="${paginaAtual}" min="1" max="${totalPaginas}" onchange="pularPagina(this)">
-                    <span style="color:var(--dim-grey); font-size:0.9rem;">de ${totalPaginas}</span>
+                    <span style="color:var(--light-grey); font-size:0.95rem; font-weight:600;">de ${totalPaginas}</span>
                     <button class="btn-page-discrete" ${paginaAtual === totalPaginas ? 'disabled' : ''} onclick="mudarPagina(1)">&gt;</button>
                 </div>
             `;
@@ -205,7 +278,7 @@
         }
 
         sincronizarDadosAoVivo();
-        setInterval(sincronizarDadosAoVivo, 60000);
+        setInterval(sincronizarDadosAoVivo, 60000); // Atualiza a cada 60s
     </script>
 </body>
 </html>
