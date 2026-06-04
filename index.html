@@ -116,8 +116,15 @@
         let educandosGlobal = []; let educadoresGlobal = [];
         let termoBusca = ""; let paginaAtualAlunos = 1; let paginaAtualEducadores = 1; const itensPorPagina = 10;
         
-        // Bloqueio das 3 ADMs
+        // Filtro invisível para remover o corpo administrativo do ranking de educadores
         const nomesExcluidos = ['jhersyka', 'debora', 'bruna'];
+
+        // Função de inteligência de texto para ignorar acentos, maiúsculas e espaços
+        function textoIgual(t1, t2) {
+            if(!t1 || !t2) return false;
+            return t1.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase() === 
+                   t2.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
+        }
 
         function mudarAba(aba) {
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -128,12 +135,11 @@
 
         function calcularRecompensas(qtdVendidos) {
             let fone = qtdVendidos >= 10 ? 1 : 0;
-            // NOVA LÓGICA: 1 A CADA 5
             let cartelas = qtdVendidos >= 5 ? 1 + Math.floor((qtdVendidos - 5) / 5) : 0;
             return { fone, cartelas };
         }
 
-        // ================== EDUCANDOS ==================
+        // ================== RENDERIZAR EDUCANDOS ==================
         function renderizarAlunos() {
             const tabela = document.getElementById("tabelaAlunosPublica");
             let filtrados = [...educandosGlobal].sort((a, b) => b.lotesVendidos - a.lotesVendidos);
@@ -159,7 +165,7 @@
                     <td class="text-center">${cartelasHTML}</td>
                     <td class="text-center">${foneHTML}</td>
                 </tr>`;
-            }).join('') || '<tr><td colspan="8" class="text-center" style="padding: 2.5rem; color: #a0a0a0;">Nenhum registro.</td></tr>';
+            }).join('') || '<tr><td colspan="8" class="text-center" style="padding: 2.5rem; color: #a0a0a0;">Nenhum registro encontrado.</td></tr>';
 
             document.getElementById("paginacaoAlunos").innerHTML = `
                 <div class="discrete-pagination">
@@ -170,7 +176,7 @@
                 </div>`;
         }
 
-        // ================== EDUCADORES ==================
+        // ================== RENDERIZAR EDUCADORES ==================
         function renderizarEducadores() {
             const tabela = document.getElementById("tabelaEducadoresPublica");
             let filtrados = [...educadoresGlobal].sort((a, b) => b.lotesVendidos - a.lotesVendidos);
@@ -187,7 +193,7 @@
                     <td style="color:var(--light-grey);">${prof.curso}</td>
                     <td class="text-center highlight-purple">${prof.lotesVendidos}</td>
                 </tr>`;
-            }).join('') || '<tr><td colspan="4" class="text-center" style="padding: 2.5rem; color: #a0a0a0;">Nenhum registro.</td></tr>';
+            }).join('') || '<tr><td colspan="4" class="text-center" style="padding: 2.5rem; color: #a0a0a0;">Nenhum registro encontrado.</td></tr>';
 
             document.getElementById("paginacaoEducadores").innerHTML = `
                 <div class="discrete-pagination">
@@ -210,27 +216,33 @@
             fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'sincronizar_dados' }) })
             .then(res => res.json()).then(data => {
                 if(data.success) {
+                    // Mapeia educandos e remove do ranking a categoria de Equipe Direta de Vendas
                     educandosGlobal = data.educandos.map(e => ({
                         nome: e['Nome_Educando'] || e['Nome'], turma: e['Turma'], curso: e['Curso'] || '-',
                         foto: e['Foto_URL'] && String(e['Foto_URL']).trim() !== '' ? e['Foto_URL'] : `https://ui-avatars.com/api/?name=${e['Nome_Educando'] || e['Nome']}&background=BC68A1&color=fff`,
                         lotesVendidos: e['Lotes_Vendidos'] ? String(e['Lotes_Vendidos']).split(',').filter(Boolean).length : 0,
                         lotesPendentes: e['Lotes_Pendentes'] ? String(e['Lotes_Pendentes']).split(',').filter(Boolean).length : 0
-                    })).filter(a => a.turma !== 'Equipe'); // Esconde a Equipe do ranking dos alunos
+                    })).filter(a => a.turma !== 'Equipe');
 
+                    // Mapeia os educadores cruzando dados com a função inteligente textoIgual
                     educadoresGlobal = data.educadores.map(e => {
                         let vendidos = 0;
-                        data.educandos.forEach(al => { if(al['Educador_Responsavel'] === e['Nome']) vendidos += (al['Lotes_Vendidos'] ? String(al['Lotes_Vendidos']).split(',').filter(Boolean).length : 0); });
+                        data.educandos.forEach(al => { 
+                            if(textoIgual(al['Educador_Responsavel'] || al['Educador_Responsavel'], e['Nome'])) {
+                                vendidos += (al['Lotes_Vendidos'] ? String(al['Lotes_Vendidos']).split(',').filter(Boolean).length : 0);
+                            }
+                        });
                         return { nome: e['Nome'], curso: e['Curso Responsavel'], lotesVendidos: vendidos };
                     }).filter(e => {
                         let nomeLimpo = e.nome.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
-                        return !nomesExcluidos.includes(nomeLimpo); // BLOQUEIA AS 3 ADMS AQUI
+                        return !nomesExcluidos.includes(nomeLimpo);
                     });
 
                     renderizarAlunos(); renderizarEducadores();
                     const d = new Date(); texto.innerText = `Placar atualizado às ${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
                     icone.classList.remove("spinner");
                 }
-            }).catch(err => { texto.innerText = "Reconectando..."; icone.classList.remove("spinner"); });
+            }).catch(err => { texto.innerText = "Erro na rede. Reconectando..."; icone.classList.remove("spinner"); });
         }
 
         sincronizarDadosAoVivo(); setInterval(sincronizarDadosAoVivo, 60000);
